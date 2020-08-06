@@ -1,5 +1,5 @@
 # go-annotation
-golang注释实现类似java的注解机制。基于ast语法解析和monkey动态代理。目前实现`@Transactional`的demo
+golang 注释实现类似java的注解机制。基于ast语法解析和monkey动态代理。目前实现`@Transactional`的demo
 
 # Usage
 
@@ -25,7 +25,8 @@ golang注释实现类似java的注解机制。基于ast语法解析和monkey动�
 ```
 
 事务管理器`TransactionManager`启动，遍历go文件，获取被指定注释标记的`包名.接收者名.方法名`  
-目前无法实现类似java的Class.ForName("class full name")字符串转对象，只能显式调用RegisterDao方法传入对象
+目前无法实现类似java的Class.ForName("class full name")字符串转对象，只能显式调用RegisterDao方法传入  
+编译时需禁用内联go build -gcflags=-l  
 
 ```
         // go build -gcflags=-l main.go
