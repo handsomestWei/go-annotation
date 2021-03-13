@@ -16,7 +16,7 @@ var config TransactionConfig
 var methodLocationMap = make(map[string]*struct{})
 
 type joinPointSessionInfo struct {
-	ParamSessionPosition int
+	SessionIndex int // orm会话对象在方法入参列表的位置
 }
 
 type TransactionConfig struct {

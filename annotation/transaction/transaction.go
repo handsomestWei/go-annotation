@@ -21,13 +21,13 @@ type Transactional struct {
 
 func (t *Transactional) Before(point *aop.JoinPoint, methodLocation string) bool {
 	if methodSessionMap[methodLocation] != nil {
-		t.doSessionBegin(point.Params[methodSessionMap[methodLocation].ParamSessionPosition].Interface())
+		t.doSessionBegin(point.Params[methodSessionMap[methodLocation].SessionIndex].Interface())
 	} else {
 		// cache
 		for i, v := range point.Params {
 			if t.doSessionBegin(v.Interface()) {
 				methodSessionMap[methodLocation] = &joinPointSessionInfo{
-					ParamSessionPosition: i,
+					SessionIndex: i,
 				}
 				break
 			}
@@ -44,9 +44,9 @@ func (t *Transactional) After(point *aop.JoinPoint, methodLocation string) {
 				switch result := v.Interface().(type) {
 				case bool:
 					if result {
-						t.doSessionCommit(point.Params[methodSessionMap[methodLocation].ParamSessionPosition])
+						t.doSessionCommit(point.Params[methodSessionMap[methodLocation].SessionIndex].Interface())
 					} else {
-						t.doSessionRollback(point.Params[methodSessionMap[methodLocation].ParamSessionPosition])
+						t.doSessionRollback(point.Params[methodSessionMap[methodLocation].SessionIndex].Interface())
 					}
 				}
 			} else {
@@ -58,7 +58,7 @@ func (t *Transactional) After(point *aop.JoinPoint, methodLocation string) {
 
 func (t *Transactional) Finally(point *aop.JoinPoint, methodLocation string) {
 	if methodSessionMap[methodLocation] != nil {
-		t.doSessionClose(point.Params[methodSessionMap[methodLocation].ParamSessionPosition])
+		t.doSessionClose(point.Params[methodSessionMap[methodLocation].SessionIndex].Interface())
 	} else {
 
 	}
